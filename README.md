@@ -1,5 +1,7 @@
 # Recurly
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/geoffdutton/recurly-client-node.svg)](https://greenkeeper.io/)
+
 Warning:
 This library does not use the V2 API. If you are attempting to build an integration with V2, please see [https://dev.recurly.com/](https://dev.recurly.com/).
 
