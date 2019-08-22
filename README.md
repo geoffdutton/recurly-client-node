@@ -1,7 +1,6 @@
 # Recurly
 [![Build Status](https://travis-ci.com/geoffdutton/recurly-client-node.svg?branch=3_0_0_beta)](https://travis-ci.com/geoffdutton/recurly-client-node)
 [![codecov](https://codecov.io/gh/geoffdutton/recurly-client-node/branch/3_beta-tests/graph/badge.svg)](https://codecov.io/gh/geoffdutton/recurly-client-node)
-
 [![Greenkeeper badge](https://badges.greenkeeper.io/geoffdutton/recurly-client-node.svg)](https://greenkeeper.io/)
 
 Warning:
