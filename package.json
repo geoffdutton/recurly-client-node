@@ -4,7 +4,9 @@
   "description": "Recurly V3 node client",
   "main": "lib/recurly.js",
   "scripts": {
-    "test": "./scripts/test"
+    "lint": "standard 'lib/**/*.js' 'test/**/*.js'",
+    "test": "npm run lint && nyc mocha --recursive",
+    "tdd": "mocha --recursive --watch"
   },
   "author": "Benjamin Eckel <ben@recurly.com>",
   "license": "MIT",
