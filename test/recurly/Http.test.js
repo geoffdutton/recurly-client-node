@@ -26,7 +26,7 @@ describe('Http', () => {
         headers: {
           'recurly-total-records': 34
         }
-      }, [`{ "some": "body" }`], req)
+      }, ['{ "some": "body" }'], req)
       assert.deepEqual(res.body, {
         some: 'body'
       })
