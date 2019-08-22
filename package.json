@@ -4,7 +4,7 @@
   "description": "Recurly V3 node client",
   "main": "lib/recurly.js",
   "scripts": {
-    "lint": "standard 'lib/**/*.js' 'test/**/*.js'",
+    "lint": "standard --fix 'lib/**/*.js' 'test/**/*.js'",
     "test": "npm run lint && nyc mocha --recursive",
     "tdd": "mocha --recursive --watch"
   },
@@ -16,6 +16,6 @@
     "documentation": "^11.0.0",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
-    "standard": "^12.0.1"
+    "standard": "^14.0.0"
   }
 }
