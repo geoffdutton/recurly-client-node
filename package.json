@@ -4,16 +4,23 @@
   "description": "Recurly V3 node client",
   "main": "lib/recurly.js",
   "scripts": {
-    "test": "./scripts/test"
+    "build": "./scripts/build",
+    "clean": "rm -f ./lib/recurly/resources/*",
+    "coverage": "node -v | grep -q v10 && codecov",
+    "lint": "standard --fix 'lib/**/*.js' 'test/**/*.js'",
+    "tdd": "mocha --recursive --watch",
+    "test": "nyc --reporter=lcov --reporter=text --reporter=html mocha --recursive"
   },
   "author": "Benjamin Eckel <ben@recurly.com>",
+  "repository": "https://github.com/recurly/recurly-client-node.git",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "acorn": "^6.0.0",
-    "documentation": "^11.0.0",
-    "mocha": "^5.2.0",
+    "acorn": "^7.0.0",
+    "codecov": "^3.5.0",
+    "documentation": "^12.1.1",
+    "mocha": "^6.2.0",
     "nyc": "^14.1.1",
-    "standard": "^12.0.1"
+    "standard": "^14.0.0"
   }
 }
