@@ -1,4 +1,3 @@
-/* globals describe, it */
 
 require('../test_helper')
 const assert = require('assert').strict

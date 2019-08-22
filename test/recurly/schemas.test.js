@@ -1,4 +1,3 @@
-/* globals describe, it, before, after */
 
 require('../test_helper')
 const utils = require('../../lib/recurly/utils')

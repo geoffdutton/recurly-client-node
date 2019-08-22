@@ -1,4 +1,3 @@
-/* globals before */
 
 const mockResources = require('./mock_resources')
 const resources = require('../lib/recurly/resources')
