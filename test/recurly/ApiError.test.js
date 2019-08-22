@@ -5,11 +5,18 @@ const ApiError = require('../../lib/recurly/ApiError')
 
 describe('ApiError', () => {
   describe('#constructor', () => {
+    it('Should set empty params', () => {
+      const err = new ApiError('my err msg', 'validation')
+      assert.equal(err.name, 'RecurlyApiError')
+      assert.equal(err.type, 'validation')
+    })
     it('Should set the internal state', () => {
       const err = new ApiError('my err msg', 'validation', [{ param: 'code' }])
       assert.equal(err.name, 'RecurlyApiError')
       assert.equal(err.type, 'validation')
       assert.deepEqual(err.params, [{ param: 'code' }])
+      err._setResponse('a response')
+      assert.equal(err.getResponse(), 'a response')
     })
   })
 })
