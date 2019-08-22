@@ -6,7 +6,7 @@
   "scripts": {
     "build": "./scripts/build",
     "clean": "rm -f ./lib/recurly/resources/*",
-    "coverage": "codecov",
+    "coverage": "node -v | grep -q v10 && codecov",
     "lint": "standard --fix 'lib/**/*.js' 'test/**/*.js'",
     "tdd": "mocha --recursive --watch",
     "test": "nyc --reporter=lcov --reporter=text --reporter=html mocha --recursive"
