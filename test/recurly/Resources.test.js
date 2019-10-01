@@ -12,7 +12,7 @@ const allResources = Object.keys(resources).map(k => {
   return typeof klass.getSchema === 'function'
 })
 
-describe('resources', () => {
+describe('Resources', () => {
   describe('schemas', () => {
     it('Should have the Page resource under the key "List"', () => {
       assert.equal(resources.List.name, 'Page')
@@ -26,8 +26,9 @@ describe('resources', () => {
         const schema = r.getSchema()
         assert.ok(typeof (schema) === 'object')
         if (r !== Empty) {
-          assert.ok(Object.keys(schema).length > 0)
-          for (const prop in schema) {
+          const props = Object.keys(schema)
+          assert.ok(props.length > 0)
+          props.forEach(prop => {
             const type = schema[prop]
             const err = `${name} has invalid schema for "${prop}".`
             if (typeof type === 'string') {
@@ -37,7 +38,7 @@ describe('resources', () => {
             } else {
               assert.ok(allowedPrimitives.includes(type), err)
             }
-          }
+          })
         }
       })
     })
