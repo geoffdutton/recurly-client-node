@@ -1,17 +1,16 @@
 # Recurly
 
-Warning:
-This library does not use the V2 API. If you are attempting to build an integration with V2, please see [https://dev.recurly.com/](https://dev.recurly.com/).
+This library houses the official node library for Recurly's V3 API.
 
-This repository contains the node client for Recurly's V3 API (or "partner api").
-It's currently Beta software and is not yet an official release. Documentation for the HTTP API can be found [here](https://partner-docs.recurly.com/).
+> *Warning*:
+> This library does not use the V2 API. Recurly does not provide an official node client for the V2 API.
 
 ## Getting Started
 
 ### Documentation
 
 Docs and example code can be found here: [https://recurly.github.io/recurly-client-node](https://recurly.github.io/recurly-client-node).
-Reference docs for the underlying V3 JSON API can be found here: [https://partner-docs.recurly.com](https://partner-docs.recurly.com).
+Documentation for the HTTP API and example code can be found [on our Developer Portal](https://developers.recurly.com/api/v2019-10-10/).
 
 ### Installing
 
@@ -22,7 +21,7 @@ We recommend manually inserting the dependency into the `dependencies` section o
 ```
 {
   // ...
-  "recurly" : "3.0.0-beta.4"
+  "recurly" : "3.0.0-beta.5"
   // ...
 }
 ```
@@ -30,7 +29,7 @@ We recommend manually inserting the dependency into the `dependencies` section o
 
 Install via the command line:
 ```
-npm install recurly@3.0.0-beta.4 --save-prod
+npm install recurly@3.0.0-beta.5 --save-prod
 ```
 
 ### Creating a client
@@ -38,15 +37,14 @@ npm install recurly@3.0.0-beta.4 --save-prod
 A client object represents a connection to the Recurly API. The client implements
 each `operation` that can be performed in the API as a method.
 
-To initialize a client, give it an API key and a subdomain:
+To initialize a client, you only need an API key which can be obtained on the [API Credentials Page](https://app.recurly.com/go/integrations/api_keys).
 
 ```js
 const recurly = require('recurly')
 // You should store your api key somewhere safe
 // and not in plain text if possible
 const myApiKey = '<myapikey>'
-const mySubdomain = '<mysubdomain>'
-const client = new recurly.Client(myApiKey, `subdomain-${mySubdomain}`)
+const client = new recurly.Client(myApiKey)
 ```
 
 ### Operations
@@ -61,7 +59,7 @@ client.getAccount('code-benjamin')
 ```
 
 ```js
-async myFunc () {
+async function myFunc () {
   try {
     let account = await client.getAccount('code-benjamin')
   } catch (err) {
@@ -95,8 +93,6 @@ two methods on `Pager` that return async iterators `each` and `eachPage`:
 
 * `each` will give you an iterator over each item that matches your query.
 * `eachPage` will give you an iterator over each page that is returned. The result is an array of resources.
-
-TODO: Need to fully test and document error handling
 
 ```js
 async function eachAccount (accounts) {
@@ -172,6 +168,37 @@ const count = await accounts.count()
 // => 573
 ```
 
+### Error Handling
+
+This library currently throws 1 primary class of exceptions, recurly.ApiError.
+The ApiError comes in a few flavors which help you determine what to do next. To see a full list, view the [api_errors module](lib/recurly/api_errors.js).
+
+```js
+try {
+  const expiredSub = await client.terminateSubscription(subId, { refund: 'full' })
+} catch (err) {
+  if (err) {
+    if (err.getResponse()) {
+      const requstId = err.getResponse().requestId
+      console.log("Request Id useful for support: ", requestId)
+    }
+
+    if (err instanceof recurly.errors.ValidationError) {
+      // If the request was not valid, you may want to tell your user
+      // why. You can find the invalid params and reasons in err.params
+      console.log('Failed validation', err.params)
+    // } else if (err instanceof recurly.errors.NotFoundError) {
+    //   console.log('Failed validation', err.params)
+    } else if (err instanceof recurly.ApiError) {
+       console.log('generic api error', err)
+    } else {
+      // If we don't know what to do with the err, we should
+      // probably re-raise and let our web framework and logger handle it
+      console.log('Unknown Error: ', err)
+    }
+  }
+}
+```
 ### HTTP Metadata
 
 Sometimes you might want to get some additional information about the underlying HTTP request and response. Instead of
@@ -211,6 +238,48 @@ try {
   }
 }
 ```
+
+### Webhooks
+
+Recurly can send webhooks to any publicly accessible server. When an event in Recurly triggers
+a webhook (e.g., an account is opened), Recurly will attempt to send this notification to the
+endpoint(s) you specify.  You can specify up to 10 endpoints through the application. All
+notifications will be sent to all configured endpoints for your site.
+
+See our [product docs](https://docs.recurly.com/docs/webhooks) to learn more about webhooks
+and see our [dev docs](https://dev.recurly.com/page/webhooks) to learn about what payloads
+are available.
+
+Although our API is now JSON, our webhook payloads are still formatted as XML for the time being.
+This library is not yet responsible for handling webhooks. If you do need webhooks, we recommend using a simple
+XML to Plain Object parser such as [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js).
+
+
+```js
+const parseString = require('xml2js').parseString
+
+const xml = `
+    <?xml version="1.0" encoding="UTF-8"?>
+    <new_account_notification>
+      <account>
+        <account_code>1</account_code>
+        <username nil="true"></username>
+        <email>verena@example.com</email>
+        <first_name>Verena</first_name>
+        <last_name>Example</last_name>
+        <company_name nil="true"></company_name>
+      </account>
+    </new_account_notification>
+`;
+
+parseString(xml, function (err, result) {
+  const code = result.new_account_notification.account[0].account_code[0];
+  console.log("New account created with code: ", code);
+})
+```
+
+You can do this without dependencies, but you'll need to heed warnings about security concerns.
+Read more about the security implications of parsing untrusted XML in [this OWASP cheatsheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_Security_Cheat_Sheet.html).
 
 ### Contributing
 
