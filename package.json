@@ -15,7 +15,7 @@
   "dependencies": {},
   "devDependencies": {
     "acorn": "^6.0.0",
-    "documentation": "^11.0.1",
+    "documentation": "^12.2.0",
     "documentation-theme-light": "^1.1.0",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
